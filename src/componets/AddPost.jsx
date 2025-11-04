@@ -2,12 +2,12 @@ import { useState } from "react";
 
 const AddPost = ({ onAddPost }) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [desc, setDescription] = useState("");
   function onhandleSubmit(e) {
     e.preventDefault();
     const inputData = {
       title,
-      description,
+      desc,
     };
     onAddPost(inputData);
 
@@ -39,7 +39,7 @@ const AddPost = ({ onAddPost }) => {
         />
         <br />
         <br />
-        <button className="px-4 py-1 border rounded">Save</button>
+        <button type="submit" className="px-4 py-1 border rounded">Save</button>
       </form>
     </>
   );

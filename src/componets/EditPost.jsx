@@ -1,19 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const EditPost = ({editpost, onEditPost}) => {
   const [title, setTitle] = useState(editpost.title);
-    const [description, setDescription] = useState(editpost.description);
+    const [desc, setDescription] = useState(editpost.desc);
     function onhandleSubmit(e) {
       e.preventDefault();
       const inputData = {
+        id: editpost.id,
         title,
-        description,
+        desc,
       };
       onEditPost(inputData);
   
-      setTitle(" ");
-      setDescription(" ");
+      setTitle("");
+      setDescription("");
     }
+    useEffect(()=>{
+      setTitle(editpost.title),
+      setDescription(editpost.desc)
+    },[editpost])
   return (
     <>
     <h2 className="text-2xl">Edit Post</h2>
@@ -25,7 +30,7 @@ const EditPost = ({editpost, onEditPost}) => {
         className="border rounded"
         name="title"
         onChange={(e) => setTitle(e.target.value)}
-        defaultValue={title}
+        value={title}
       />
       <br />
       <br />
@@ -34,13 +39,13 @@ const EditPost = ({editpost, onEditPost}) => {
       <input
         type="text"
         className="border rounded"
-        name="description"
+        name="desc"
         onChange={(e) => setDescription(e.target.value)}
-        defaultValue={description}
+        value={desc}
       />
       <br />
       <br />
-      <button className="px-4 py-1 border rounded">Save</button>
+      <button type='submit' className="px-4 py-1 border rounded">update</button>
     </form>
     </>
   )
