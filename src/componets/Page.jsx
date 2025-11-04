@@ -4,6 +4,7 @@ import PostList from "./PostList";
 import AddPost from "./AddPost";
 import EditPost from "./EditPost";
 import axios from "axios";
+import api from "../api/api"
 const Page = () => {
   const [posts, setPosts] = useState(Posts);
   const [editpost, setEditPost] = useState(null);
@@ -16,32 +17,47 @@ const Page = () => {
         id: id.toString(),
         ...newpost,
       };
-      const response = await axios.post("http://localhost:8000/posts", data);
+      const response = await api.post("/posts", data);
       setPosts([...posts, response.data]);
     } catch (error) {
       setError(error.message);
     }
   };
-  function handleEdit(postEdit) {
-    const data = posts.map((post) =>
-      post.id === postEdit.id ? postEdit : post
-    );
-    setPosts(data);
-  }
-
-  function handleDelete(postId) {
-    if (confirm("Are you delete this post")) {
-      const data = posts.filter((post) => post.id !== postId);
+  const handleEdit = async (postEdit) => {
+    try {
+      const response = await api.patch(
+        `posts/${postEdit.id}`,
+        postEdit
+      );
+      const data = posts.map((post) =>
+        post.id === response.data.id ? response.data : post
+      );
       setPosts(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleDelete = async (postId) => {
+    if (confirm("Are you delete this post")) {
+      try {
+        await api.delete(
+          `posts/${postId}`
+        );
+        const data = posts.filter((post) => post.id !== postId);
+        setPosts(data);
+      } catch (error) {
+        setError(error.message);
+      }
     } else {
       console.log("not delete post");
     }
-  }
+  };
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios("http://localhost:8000/posts");
+        const response = await axios.get("http://localhost:8000/posts");
 
         if (response && response.data) {
           setPosts(response.data);
